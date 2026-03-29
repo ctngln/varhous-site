@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Varhous SAAS</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        surface: '#0a0a0a',
+                        'surface-raised': '#1a1a1a',
+                        'surface-border': '#252525',
+                        accent: '#e8580c',
+                        dim: '#666',
+                        faint: '#444',
+                    },
+                    fontFamily: {
+                        display: ['"Anton"', 'sans-serif'],
+                        mono: ['"Geist Mono"', '"SF Mono"', 'Consolas', 'monospace'],
+                        sans: ['"Inter"', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* Dot navigation */
+        .dot-nav {
+            position: fixed;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .dot-nav a {
+            display: block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #444;
+            transition: all 0.3s;
+        }
+        .dot-nav a.active {
+            background: #e8580c;
+            width: 10px;
+            height: 10px;
+        }
+        .dot-nav a:hover {
+            background: #e8580c;
+        }
+
+        /* Split-flap letter styling */
+        .hero-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #3d1e08;
+            color: #e8580c;
+            transition: background 0.15s, color 0.15s;
+            width: 1em;
+            height: 1.2em;
+            margin: 0 2px;
+            line-height: 1;
+            position: relative;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+            cursor: default;
+        }
+        /* Horizontal split line */
+        .hero-letter::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 2px;
+            background: rgba(0,0,0,0.15);
+            z-index: 1;
+        }
+        /* Top half slightly lighter */
+        .hero-letter::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: rgba(255,255,255,0.06);
+            border-radius: 4px 4px 0 0;
+        }
+        /* Flip animation */
+        .hero-letter.flipping {
+            animation: flipTick 0.08s ease-in-out;
+        }
+        @keyframes flipTick {
+            0% { transform: scaleY(1); }
+            50% { transform: scaleY(0.85); }
+            100% { transform: scaleY(1); }
+        }
+
+        /* Card hover */
+        .project-card {
+            border: 1px solid #252525;
+            transition: border-color 0.3s, transform 0.2s;
+        }
+        .project-card:hover {
+            border-color: #e8580c;
+            transform: translateY(-2px);
+        }
+        .project-card:hover .card-title {
+            color: #e8580c;
+        }
+
+        /* Section fade-in */
+        .fade-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .fade-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Smooth scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #444; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #666; }
+    </style>
+</head>
+<body class="text-gray-300 font-mono antialiased min-h-screen">
+
+    <!-- Dot Navigation -->
+    <nav class="dot-nav hidden lg:flex">
+        <a href="#hero" class="active" data-section="hero"></a>
+        <a href="#signals" data-section="signals"></a>
+        <a href="#colophon" data-section="colophon"></a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="flex flex-col justify-start px-6 sm:px-12 lg:px-24 pt-[10vh] pb-16">
+        <div class="max-w-6xl">
+            <!-- Hero letters -->
+            <div id="hero-word" class="mb-12 flex flex-nowrap">
+                <span class="hero-letter font-display text-6xl sm:text-8xl lg:text-[9rem]" data-letter="V">V</span>
+                <span class="hero-letter font-display text-6xl sm:text-8xl lg:text-[9rem]" data-letter="A">A</span>
+                <span class="hero-letter font-display text-6xl sm:text-8xl lg:text-[9rem]" data-letter="R">R</span>
+                <span class="hero-letter font-display text-6xl sm:text-8xl lg:text-[9rem]" data-letter="H">H</span>
+                <span class="hero-letter font-display text-6xl sm:text-8xl lg:text-[9rem]" data-letter="O">O</span>
+                <span class="hero-letter font-display text-6xl sm:text-8xl lg:text-[9rem]" data-letter="U">U</span>
+                <span class="hero-letter font-display text-6xl sm:text-8xl lg:text-[9rem]" data-letter="S">S</span>
+            </div>
+
+            <!-- Tagline -->
+            <p class="text-xl sm:text-2xl text-gray-300 font-sans font-light mb-8 max-w-xl leading-relaxed">
+                Superb SaaSy Database Applications.
+            </p>
+
+            <!-- Description -->
+            <div class="font-mono text-[15px] text-gray-400 leading-relaxed max-w-lg space-y-3">
+                <p>We are a custom software studio that turns data into doing, inputs to optimal outcomes.</p>
+                <p>In fewer words, we're makers of handy things.</p>
+                <p>B2E / B2B / B2C.</p>
+            </div>
+
+        </div>
+
+        <div id="spite-box" class="mt-40 flex justify-end">
+            <span class="text-xs font-mono text-gray-500 border border-gray-600 px-4 py-2 tracking-wider">Made with spite and club soda</span>
+        </div>
+    </section>
+
+    <!-- What's New / Signals Section -->
+    <section id="signals" class="px-6 sm:px-12 lg:px-24 py-16 fade-section">
+        <div class="mb-10">
+            <p class="font-mono text-accent text-xs tracking-[0.3em] uppercase mb-4">01 / Signals</p>
+            <h2 class="font-sans text-white text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight">What's New</h2>
+        </div>
+
+        <div class="max-w-md mt-10">
+            <!-- Card 1: Yes Way Bae -->
+            <a href="https://yeswaybae.com" target="_blank" rel="noopener" class="project-card bg-surface-raised rounded-sm p-6 flex flex-col justify-between min-h-[220px] block">
+                <div>
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="font-mono text-dim text-xs tracking-wider">NO. 01</span>
+                        <span class="font-mono text-dim text-xs">2026.03.28</span>
+                    </div>
+                    <h3 class="card-title font-sans text-white text-xl font-medium transition-colors mb-1">Yes Way Bae</h3>
+                    <div class="w-6 h-0.5 bg-accent mt-2 mb-4"></div>
+                </div>
+                <p class="font-mono text-xs text-gray-400 leading-relaxed">Couples health tracking platform.<br>Weight, activities, body stats, together.</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- Colophon / Credits Section -->
+    <section id="colophon" class="px-6 sm:px-12 lg:px-24 py-16 min-h-[60vh] fade-section">
+        <div class="mb-12">
+            <p class="font-mono text-accent text-xs tracking-[0.3em] uppercase mb-4">02 / Colophon</p>
+            <h2 class="font-sans text-white text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight">Credits</h2>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8 lg:gap-12">
+            <div>
+                <h4 class="font-mono text-xs tracking-[0.2em] uppercase text-dim mb-4">Design</h4>
+                <ul class="font-mono text-sm text-gray-400 space-y-1.5">
+                    <li>Varhous SAAS</li>
+                    <li>In-house</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-mono text-xs tracking-[0.2em] uppercase text-dim mb-4">Stack</h4>
+                <ul class="font-mono text-sm text-gray-400 space-y-1.5">
+                    <li>Django</li>
+                    <li>Tailwind CSS</li>
+                    <li>Alpine.js</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-mono text-xs tracking-[0.2em] uppercase text-dim mb-4">Typography</h4>
+                <ul class="font-mono text-sm text-gray-400 space-y-1.5">
+                    <li>Anton</li>
+                    <li>Inter</li>
+                    <li>Geist Mono</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-mono text-xs tracking-[0.2em] uppercase text-dim mb-4">Location</h4>
+                <ul class="font-mono text-sm text-gray-400 space-y-1.5">
+                    <li>Remote</li>
+                    <li>(Everywhere)</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-mono text-xs tracking-[0.2em] uppercase text-dim mb-4">Contact</h4>
+                <ul class="font-mono text-sm text-gray-400 space-y-1.5">
+                    <li><a href="mailto:hello@varhous.com" class="hover:text-accent transition-colors">Email</a></li>
+                </ul>
+            </div>
+            <div id="year-col">
+                <h4 class="font-mono text-xs tracking-[0.2em] uppercase text-dim mb-4">Year</h4>
+                <ul class="font-mono text-sm text-gray-400 space-y-1.5">
+                    <li>2026</li>
+                    <li>Ongoing</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer spacer -->
+    <div class="h-16"></div>
+
+    <script>
+        // Split-flap animation
+        const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const TARGET = 'VARHOUS';
+
+        function setOrangeState(el) {
+            el.style.background = '#3d1e08';
+            el.style.color = '#e8580c';
+        }
+
+        function setSettledState(el) {
+            el.style.background = '#e8e8e8';
+            el.style.color = '#0a0a0a';
+        }
+
+        function flipToTarget(letterEl, targetChar, delay) {
+            const totalFlips = 8; // Same for all letters = uniform timing
+            let flips = 0;
+
+            setOrangeState(letterEl);
+
+            setTimeout(() => {
+                const interval = setInterval(() => {
+                    letterEl.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+                    letterEl.classList.add('flipping');
+                    setTimeout(() => letterEl.classList.remove('flipping'), 80);
+                    flips++;
+
+                    if (flips >= totalFlips) {
+                        clearInterval(interval);
+                        letterEl.textContent = targetChar;
+                        setSettledState(letterEl);
+                        letterEl.classList.add('flipping');
+                        setTimeout(() => letterEl.classList.remove('flipping'), 80);
+                    }
+                }, 100); // Slower tick
+            }, delay);
+        }
+
+        // On page load: flip from random to VARHOUS
+        document.addEventListener('DOMContentLoaded', () => {
+            const letters = document.querySelectorAll('#hero-word .hero-letter');
+            letters.forEach((el, i) => {
+                setOrangeState(el);
+                el.textContent = CHARS[Math.floor(Math.random() * CHARS.length)];
+                flipToTarget(el, TARGET[i], i * 150); // Uniform stagger: each letter starts 150ms after the previous
+            });
+        });
+
+        // On hover: flip again
+        document.getElementById('hero-word').addEventListener('mouseenter', () => {
+            const letters = document.querySelectorAll('#hero-word .hero-letter');
+            letters.forEach((el, i) => {
+                flipToTarget(el, TARGET[i], i * 120); // Slightly faster on hover
+            });
+        });
+
+        // Align "Made with spite" and Credits grid to right edge of S tile
+        function alignToS() {
+            const letters = document.querySelectorAll('#hero-word .hero-letter');
+            const lastLetter = letters[letters.length - 1];
+            const sRight = lastLetter.getBoundingClientRect().right;
+
+            // Spite box: constrain width so right edge = S right edge
+            // The spite box's parent has padding, so measure from spite box's own left
+            const spiteBox = document.getElementById('spite-box');
+            spiteBox.style.maxWidth = 'none'; // Reset first
+            const spiteLeft = spiteBox.getBoundingClientRect().left;
+            spiteBox.style.maxWidth = (sRight - spiteLeft) + 'px';
+
+            // Credits grid: same approach
+            const creditsGrid = document.querySelector('#colophon .grid');
+            creditsGrid.style.maxWidth = 'none'; // Reset first
+            const gridLeft = creditsGrid.getBoundingClientRect().left;
+            creditsGrid.style.maxWidth = (sRight - gridLeft) + 'px';
+        }
+
+        // Run after fonts load and on resize
+        document.fonts.ready.then(() => setTimeout(alignToS, 100));
+        window.addEventListener('resize', alignToS);
+
+        // Intersection Observer for fade-in sections
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-section').forEach(el => observer.observe(el));
+
+        // Dot navigation — scroll-based
+        const dots = document.querySelectorAll('.dot-nav a');
+        const sectionIds = ['hero', 'signals', 'colophon'];
+
+        function updateDots() {
+            const scrollY = window.scrollY + window.innerHeight / 2;
+            let activeId = 'hero';
+            for (const id of sectionIds) {
+                const el = document.getElementById(id);
+                if (el && el.offsetTop <= scrollY) {
+                    activeId = id;
+                }
+            }
+            dots.forEach(d => {
+                d.classList.toggle('active', d.dataset.section === activeId);
+            });
+        }
+
+        window.addEventListener('scroll', updateDots, { passive: true });
+        updateDots();
+    </script>
+</body>
+</html>
